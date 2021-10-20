@@ -1,13 +1,22 @@
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+WORKDIR /app
+EXPOSE 80
+
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-WORKDIR /app
-
+WORKDIR /src
+COPY ["NuGet.Config", "."]
+COPY ["RecomendationForStartups/RecomendationForStartups.csproj", "RecomendationForStartups/"]
+COPY ["RecomendationForStartups.ServiceInterface/RecomendationForStartups.ServiceInterface.csproj", "RecomendationForStartups.ServiceInterface/"]
+COPY ["RecomendationForStartups.ServiceModel/RecomendationForStartups.ServiceModel.csproj", "RecomendationForStartups.ServiceModel/"]
+RUN dotnet restore "RecomendationForStartups/RecomendationForStartups.csproj"
 COPY . .
-RUN dotnet restore
+WORKDIR "/src/RecomendationForStartups"
+RUN dotnet build "RecomendationForStartups.csproj" -c Release -o /app/build
 
-WORKDIR /app/RecomendationForStartups
-RUN dotnet publish -c release -o /out --no-restore
+FROM build AS publish
+RUN dotnet publish "RecomendationForStartups.csproj" -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
+FROM base AS final
 WORKDIR /app
-COPY --from=build /out .
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "RecomendationForStartups.dll"]
