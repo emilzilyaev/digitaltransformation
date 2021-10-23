@@ -20,4 +20,22 @@
     <ProjectReference Include="..\RecomendationForStartups.ServiceModel\RecomendationForStartups.ServiceModel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\Категория МСП.1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Рынок.n.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Стадия развития.1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Технологии.n.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Технологическая ниша.n.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

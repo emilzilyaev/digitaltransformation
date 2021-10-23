@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -16,6 +17,8 @@ namespace RecomendationForStartups
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public new void ConfigureServices(IServiceCollection services)
         {
+            var mapper = AppModelMapping.ConfigureMapping();
+            services.AddSingleton<IMapper>(mapper);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

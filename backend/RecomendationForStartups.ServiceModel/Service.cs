@@ -19,7 +19,7 @@ namespace RecomendationForStartups.ServiceModel
     [Route("/Recommendation", Verbs = "POST", Summary = "Получение рекомендаций по параметрам")]
     public class GetRecommendation : IReturn<GetRecommendation.GetRecommendationResponse>
     {
-        [ApiMember(Description = "Список параметров", IsRequired =true)]
+        [ApiMember(Description = "Список параметров")]
         public List<ParameterValue> Parameters { get; set; }
         
         [Description("Результат получения рекомендаций по параметрам")]

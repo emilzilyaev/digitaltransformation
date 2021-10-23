@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +15,7 @@ using Raven.Client.Documents.Session;
 using Raven.Client.ServerWide;
 using Raven.Client.ServerWide.Operations;
 using Raven.Embedded;
+using RecomendationForStartups.Domain;
 
 namespace RecomendationForStartups
 {
@@ -131,20 +134,56 @@ namespace RecomendationForStartups
                 {
                     documentStore.ConfigureRevisions();
                 }
-                //var session = documentStore.OpenSession();
-                //var haveAnyChat = session.Query<Chat>().Any();
-                //if (!haveAnyChat)
-                //{
-                //    var firstChat = new Chat()
-                //    {
-                //        Id = Guid.NewGuid().ToString(),
-                //        ChatName = "SkillBoxChat",
-                //        ChatType = ChatType.Public,
-                //        OwnerId = ""
-                //    };
-                //    session.Store(firstChat);
-                //    session.SaveChanges();
-                //}
+                var session = documentStore.OpenSession();
+                var haveAnyParameterDefinition = session.Query<ParameterDefinition>().Any();
+                if (!haveAnyParameterDefinition)
+                {
+                    var dataCatalog = new DirectoryInfo("Data");
+                    if (dataCatalog.Exists)
+                    {
+                        dataCatalog = dataCatalog.GetDirectories().First(i => i.Name == "Parameters");
+                        foreach (var fileInfo in dataCatalog.EnumerateFiles())
+                        {
+                            var lines = fileInfo.ReadAllText().Split("\n").Select(s => s.Trim())
+                                .Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+                            var nameSplit = fileInfo.Name.Split(".");
+                            var parameterDefinition = new ParameterDefinition()
+                            {
+                                Id = nameSplit[0],
+                                AcceptableValues = lines,
+                                Type = nameSplit[1] == "1"? ParameterType.OneAcceptable: ParameterType.MultiAcceptable,
+                            };
+                            session.Store(parameterDefinition);
+                        }
+                        session.SaveChanges();
+                    }
+                }
+
+                var haveAnyRecommendation = session.Query<Recommendation>().Any();
+                if (!haveAnyRecommendation)
+                {
+                    var dataCatalog = new DirectoryInfo("Data");
+                    if (dataCatalog.Exists)
+                    {
+                        dataCatalog = dataCatalog.GetDirectories().First(i => i.Name == "Recommendation");
+                        foreach (var fileInfo in dataCatalog.EnumerateFiles())
+                        {
+                            var lines = fileInfo.ReadAllText().Split("\n").Select(s => s.Trim())
+                                .Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+                            foreach (var line in lines)
+                            {
+                                var match = Regex.Match(line, "(?<id>\\d+)\\s+(?<name>.+)");
+                                var recommendation = new Recommendation
+                                {
+                                    Id = match.Groups["id"].Value,
+                                    Description = match.Groups["name"].Value.Trim()
+                                };
+                                session.Store(recommendation);
+                            }
+                        }
+                        session.SaveChanges();
+                    }
+                }
 
                 return documentStore;
             });

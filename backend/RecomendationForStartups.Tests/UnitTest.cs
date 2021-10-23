@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using ServiceStack;
 using ServiceStack.Testing;
@@ -21,11 +22,11 @@ namespace RecomendationForStartups.Tests
         public void OneTimeTearDown() => appHost.Dispose();
 
         [Test]
-        public void Can_call_MyServices()
+        public async Task Can_call_MyServices()
         {
             var service = appHost.Container.Resolve<MyServices>();
 
-            var response = service.Get(new GetParameters());
+            var response = await service.Get(new GetParameters());
 
             Assert.True(response.Parameters.Any());
         }
