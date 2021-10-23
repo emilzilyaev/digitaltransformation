@@ -1,3 +1,4 @@
+using System.Linq;
 using NUnit.Framework;
 using ServiceStack;
 using ServiceStack.Testing;
@@ -24,9 +25,9 @@ namespace RecomendationForStartups.Tests
         {
             var service = appHost.Container.Resolve<MyServices>();
 
-            var response = (HelloResponse)service.Any(new Hello { Name = "World" });
+            var response = service.Get(new GetParameters());
 
-            Assert.That(response.Result, Is.EqualTo("Hello, World!"));
+            Assert.True(response.Parameters.Any());
         }
     }
 }

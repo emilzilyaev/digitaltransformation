@@ -1,3 +1,4 @@
+using System.Linq;
 using Funq;
 using ServiceStack;
 using NUnit.Framework;
@@ -37,9 +38,9 @@ namespace RecomendationForStartups.Tests
         {
             var client = CreateClient();
 
-            var response = client.Get(new Hello { Name = "World" });
+            var response = client.Get(new GetParameters());
 
-            Assert.That(response.Result, Is.EqualTo("Hello, World!"));
+            Assert.True(response.Parameters.Any());
         }
     }
 }

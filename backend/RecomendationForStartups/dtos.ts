@@ -1,11 +1,11 @@
 /* Options:
-Date: 2021-02-10 05:16:52
-Version: 5.105
+Date: 2021-10-23 15:01:43
+Version: 5.121
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: https://localhost:5001
 
 //GlobalNamespace: 
-//MakePropertiesOptional: False
+//MakePropertiesOptional: True
 //AddServiceStackTypes: True
 //AddResponseStatus: False
 //AddImplicitVersion: 
@@ -16,31 +16,132 @@ BaseUrl: https://localhost:5001
 */
 
 
-export interface IReturn<T>
-{
-    createResponse(): T;
+interface IReturn<T> {
 }
 
-export interface IReturnVoid
-{
-    createResponse(): void;
+interface IReturnVoid {
 }
 
-export class HelloResponse
-{
-    public result: string;
-
-    public constructor(init?: Partial<HelloResponse>) { (Object as any).assign(this, init); }
+/**
+* Значение параметра
+*/
+interface ParameterValue {
+    /**
+    * Идентификатор параметра
+    */
+    id?: string;
+    /**
+    * Список значений
+    */
+    values?: string[];
 }
 
-// @Route("/hello")
-// @Route("/hello/{Name}")
-export class Hello implements IReturn<HelloResponse>
-{
-    public name: string;
+type ParameterType = "NumberRange" | "OneAcceptable" | "MultiAcceptable";
 
-    public constructor(init?: Partial<Hello>) { (Object as any).assign(this, init); }
-    public createResponse() { return new HelloResponse(); }
-    public getTypeName() { return 'Hello'; }
+/**
+* Список параметров
+*/
+interface ParameterDefinition {
+    /**
+    * Идентификатор параметра
+    */
+    id?: string;
+    /**
+    * Тип параметра
+    */
+    type?: ParameterType;
+    /**
+    * Список допустимых значений
+    */
+    acceptableValues?: string[];
 }
 
+/**
+* Рекомендация
+*/
+interface RecommendationInfo {
+    /**
+    * Идентификатор рекомендации
+    */
+    id?: string;
+    /**
+    * Название
+    */
+    description?: string;
+    /**
+    * Процент совпадения
+    */
+    matchPercentage?: number;
+}
+
+interface ParametersCombination {
+    /**
+    * Список параметров
+    */
+    parameters?: ParameterValue[];
+    /**
+    * Дата создания
+    */
+    created?: string;
+}
+
+/**
+* Результат получения описания параметров
+*/
+interface GetParametersResponse {
+    /**
+    * Список параметров
+    */
+    parameters?: ParameterDefinition[];
+}
+
+/**
+* Результат получения рекомендаций по параметрам
+*/
+interface GetRecommendationResponse {
+    /**
+    * Список рекомендаций
+    */
+    recommendations?: RecommendationInfo[];
+}
+
+/**
+* Результат получения истории комбинаций параметров
+*/
+interface GetParametersHistoryResponse {
+    /**
+    * Список комбинаций параметров
+    */
+    combinations?: ParametersCombination[];
+}
+
+// @Route("/Parameters", "GET")
+interface GetParameters extends IReturn<GetParametersResponse> {
+}
+
+// @Route("/Recommendation", "POST")
+interface GetRecommendation extends IReturn<GetRecommendationResponse> {
+    /**
+    * Список параметров
+    */
+    // @ApiMember(Description="Список параметров", IsRequired=true)
+    parameters: ParameterValue[];
+}
+
+// @Route("/Recommendation/{RecommendationId}", "PUT")
+interface UpdateRecommendation {
+    /**
+    * Список параметров
+    */
+    // @ApiMember(Description="Список параметров", IsRequired=true)
+    parameters: ParameterValue[];
+
+    /**
+    * Идентификатор рекомендации
+    */
+    recommendationId?: string;
+}
+
+// @Route("/Parameters/History", "GET")
+interface GetParametersHistory extends IReturn<GetParametersHistoryResponse> {
+}
