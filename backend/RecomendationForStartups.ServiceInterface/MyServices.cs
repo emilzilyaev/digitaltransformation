@@ -4,19 +4,64 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
+using Raven.Client.Exceptions;
 using ServiceStack;
 using RecomendationForStartups.ServiceModel;
 using RecomendationForStartups.ServiceModel.Types;
 
 namespace RecomendationForStartups.ServiceInterface
 {
+    [Route("/datasphere/v1/nodes/node_id:execute", Verbs = "POST")]
+    public class ExecuteModel : IReturn<ExecuteModel.ExecuteModelResponse>
+    {
+        public string folder_id { get; set; }
+        public string node_id { get; set; }
+        public InputModel input { get; set; }
+
+        public class InputModel
+        {
+            public string a { get; set; }
+            public string b { get; set; }
+            public string c { get; set; }
+            public string d { get; set; }
+            public string e { get; set; }
+        }
+
+        public class ExecuteModelResponse
+        {
+            public Output output { get; set; }
+
+            public class Output
+            {
+                public List<string> services
+                {
+                    get;
+                    set;
+                }
+            }
+        }
+    }
+
+    [Route("/computeMetadata/v1/instance/service-accounts/default/token", Verbs = "GET")]
+    public class GetToken : IReturn<GetToken.GetTokenResponse>
+    {
+        public class GetTokenResponse
+        {
+            public string access_token { get; set; }
+            public string token_type { get; set; }
+            public int expires_in { get; set; }
+        }
+    }
+
     public class MyServices : Service
     {
         public IAsyncDocumentSession RavenSession { get; set; }
         public IMapper Mapper { get; set; }
-
+        public IConfiguration Configuration { get; set; }
+        
         public async Task<GetParameters.GetParametersResponse> Get(GetParameters request)
         {
             var response = new GetParameters.GetParametersResponse();
@@ -27,7 +72,38 @@ namespace RecomendationForStartups.ServiceInterface
 
         public async Task<GetRecommendation.GetRecommendationResponse> Post(GetRecommendation request)
         {
+            if (request?.Parameters == null)
+                throw new BadRequestException();
             var response = new GetRecommendation.GetRecommendationResponse();
+            var mlSection = Configuration.GetSection("ML");
+            var mlBaseUri = mlSection["BaseUri"].Replace("node_id", mlSection["NodeId"]);
+            var mlClient = new JsonServiceClient(mlBaseUri);
+            mlClient.AsyncOneWayBaseUri = mlClient.BaseUri;
+            mlClient.SyncReplyBaseUri = mlClient.BaseUri;
+#if !DEBUG
+            mlClient.BearerToken = mlSection["Token"];
+#else
+            var tokenClient = new JsonServiceClient("http://169.254.169.254");
+            tokenClient.AddHeader("Metadata-Flavor","Google");
+            tokenClient.AsyncOneWayBaseUri = mlClient.BaseUri;
+            tokenClient.SyncReplyBaseUri = mlClient.BaseUri;
+            var getTokenResult = await tokenClient.GetAsync(new GetToken());
+            mlClient.BearerToken = getTokenResult.access_token;
+#endif
+            var mlResult = await mlClient.PostAsync(new ExecuteModel
+            {
+                folder_id = mlSection["FolderId"],
+                node_id = mlSection["NodeId"],
+                input = new ExecuteModel.InputModel
+                {
+                    a = "1",
+                    b = "2",
+                    c = "3",
+                    d = "4",
+                    e = "5"
+                }
+            });
+
             //TODO тут обращаемся к нейронке
             var random = new Random();
             var result = new Dictionary<string, double>();
@@ -54,8 +130,8 @@ namespace RecomendationForStartups.ServiceInterface
 
             var combination = new Domain.ParametersCombination();
             combination.Parameters = request.Parameters?.Select(Mapper.Map<Domain.ParameterValue>).ToList();
-            var key =new StringBuilder();
-            if (combination.Parameters!= null)
+            var key = new StringBuilder();
+            if (combination.Parameters != null)
             {
                 foreach (var parameter in combination.Parameters.OrderBy(value => value.Id))
                 {
@@ -75,7 +151,7 @@ namespace RecomendationForStartups.ServiceInterface
 
         public async Task Put(UpdateRecommendation request)
         {
-
+            //TODO тут надо дообучать модель
         }
 
         public async Task<GetParametersHistory.GetParametersHistoryResponse> Get(GetParametersHistory request)

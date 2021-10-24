@@ -138,12 +138,15 @@ namespace RecomendationForStartups
                 var haveAnyParameterDefinition = session.Query<ParameterDefinition>().Any();
                 if (!haveAnyParameterDefinition)
                 {
+                    Console.WriteLine("ParameterDefinition not found!");
                     var dataCatalog = new DirectoryInfo("Data");
                     if (dataCatalog.Exists)
                     {
+                        Console.WriteLine($"{dataCatalog.FullName} is exist");
                         dataCatalog = dataCatalog.GetDirectories().First(i => i.Name == "Parameters");
                         foreach (var fileInfo in dataCatalog.EnumerateFiles())
                         {
+                            Console.WriteLine($"Read {fileInfo.FullName} reading...");
                             var lines = fileInfo.ReadAllText().Split("\n").Select(s => s.Trim())
                                 .Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
                             var nameSplit = fileInfo.Name.Split(".");
@@ -153,6 +156,8 @@ namespace RecomendationForStartups
                                 AcceptableValues = lines,
                                 Type = nameSplit[1] == "1"? ParameterType.OneAcceptable: ParameterType.MultiAcceptable,
                             };
+
+                            Console.WriteLine($"Read {fileInfo.FullName} parsed {lines.Count}");
                             session.Store(parameterDefinition);
                         }
                         session.SaveChanges();
@@ -165,9 +170,11 @@ namespace RecomendationForStartups
                     var dataCatalog = new DirectoryInfo("Data");
                     if (dataCatalog.Exists)
                     {
+                        Console.WriteLine($"{dataCatalog.FullName} is exist");
                         dataCatalog = dataCatalog.GetDirectories().First(i => i.Name == "Recommendation");
                         foreach (var fileInfo in dataCatalog.EnumerateFiles())
                         {
+                            Console.WriteLine($"Read {fileInfo.FullName} reading...");
                             var lines = fileInfo.ReadAllText().Split("\n").Select(s => s.Trim())
                                 .Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
                             foreach (var line in lines)
