@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="RavenDB.Client" Version="5.2.3" />
+    <PackageReference Include="ServiceStack" Version="5.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RecomendationForStartups.Domain\RecomendationForStartups.Domain.csproj" />
+    <ProjectReference Include="..\RecomendationForStartups.ServiceModel\RecomendationForStartups.ServiceModel.csproj" />
+  </ItemGroup>
+
+</Project>
