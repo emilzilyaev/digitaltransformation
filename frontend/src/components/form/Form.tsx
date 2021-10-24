@@ -32,17 +32,26 @@ const makeOptions = (words?: string[]) => {
     });
 };
 
+const idsMap = new Map<string, string>();
+
 const Basic = () => {
     const {handleSubmit, control, getValues, setError, clearErrors, formState: {errors}} = useForm();
     const [modelParams, setParams] = useState<ParameterDefinition[] | undefined>([]);
     const [recommendations, setRecommendations] = useState<RecommendationInfo[] | undefined>([]);
 
     const onSubmit = () => {
-        sendUserChoice(getValues());
-        fetchParams();
+        const data: UnpackNestedValue<FieldValues> = getValues();
+        const parameters = [];
+        for (let key in data) {
+            if (!data.hasOwnProperty(key)) continue;
+            const contents = data[key];
+            const values = Array.isArray(contents) ? contents.map((it) => it.label) : [contents.label];
+            parameters.push({id: idsMap.get(key), values});
+        }
+        sendUserChoice({parameters});
     };
 
-    const sendUserChoice = (values: UnpackNestedValue<FieldValues>) => {
+    const sendUserChoice = (values: GetRecommendation) => {
         axios.post<GetRecommendationResponse>(USER_CHOICE, {
             body: values,
         }).then(({data}) => {
@@ -52,7 +61,11 @@ const Basic = () => {
 
     const fetchParams = () => {
         axios.get<GetParametersResponse>(PARAMS_URL).then(({data}) => {
-            setParams(data.parameters);
+            const parameters = data.parameters || [];
+            setParams(parameters);
+            parameters.forEach((param) => {
+                idsMap.set(toId(param.id), param.id)
+            })
         })
     };
 
