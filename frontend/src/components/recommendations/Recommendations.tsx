@@ -7,7 +7,7 @@ const formatNum = (num?: number) => {
 
 const RecommendationItem = (props: {item: RecommendationInfo, index: number}) => {
     const {item, index} = props;
-    const width = (100 - index * 10) > 10 ? (100 - index * 10) : 10;
+    const width = (100 - index * 5) > 10 ? (100 - index * 5) : 10;
     return (
         <div className="recommendation-item">
             <div>
