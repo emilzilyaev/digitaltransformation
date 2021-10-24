@@ -1,14 +1,18 @@
 import React from "react";
 import "./styles.css";
 
+const formatNum = (num?: number) => {
+    return ((num || 0) * 100).toFixed(1);
+};
+
 const RecommendationItem = (props: {item: RecommendationInfo, index: number}) => {
     const {item, index} = props;
     const width = (100 - index * 10) > 10 ? (100 - index * 10) : 10;
     return (
         <div className="recommendation-item">
             <div>
-                <span className="recommendation-item__score">{item.matchPercentage}%</span>
-                <span className="recommendation-item__title">{item.id}</span>
+                <span className="recommendation-item__score">{formatNum(item.matchPercentage)}%</span>
+                <span className="recommendation-item__title">{item.description}</span>
             </div>
             <div style={{
                 width: `${width}%`
@@ -29,11 +33,12 @@ const List = (props: RecommendationProps) => {
     }
     return (
         <div>
+            <div className="spacer"/>
             <h1>Вам больше всего подойдет</h1>
             {
-                items.map((item, index) => <RecommendationItem index={index} item={item} key={item.id} />)
+                // Показываем первые 30 результатов
+                items.slice(0, 30).map((item, index) => <RecommendationItem index={index} item={item} key={item.id} />)
             }
-
         </div>
     )
 };

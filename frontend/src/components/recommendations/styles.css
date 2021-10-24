@@ -27,3 +27,7 @@
 .recommendation-item__title {
     margin-left: 15px;
 }
+
+.spacer {
+    height: 40px;
+}

@@ -4,15 +4,15 @@ Version: 5.121
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: https://localhost:5001
 
-//GlobalNamespace: 
+//GlobalNamespace:
 //MakePropertiesOptional: True
 //AddServiceStackTypes: True
 //AddResponseStatus: False
-//AddImplicitVersion: 
+//AddImplicitVersion:
 //AddDescriptionAsComments: True
-//IncludeTypes: 
-//ExcludeTypes: 
-//DefaultImports: 
+//IncludeTypes:
+//ExcludeTypes:
+//DefaultImports:
 */
 
 
@@ -23,15 +23,15 @@ interface IReturnVoid {
 }
 
 /**
-* Значение параметра
+* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 */
 interface ParameterValue {
     /**
-    * Идентификатор параметра
+    * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     id?: string;
     /**
-    * Список значений
+    * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     values?: string[];
 }
@@ -39,78 +39,78 @@ interface ParameterValue {
 type ParameterType = "NumberRange" | "OneAcceptable" | "MultiAcceptable";
 
 /**
-* Список параметров
+* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 */
 interface ParameterDefinition {
     /**
-    * Идентификатор параметра
+    * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
-    id?: string;
+    id: string;
     /**
-    * Тип параметра
+    * пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     type?: ParameterType;
     /**
-    * Список допустимых значений
+    * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     acceptableValues?: string[];
 }
 
 /**
-* Рекомендация
+* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 */
 interface RecommendationInfo {
     /**
-    * Идентификатор рекомендации
+    * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     id?: string;
     /**
-    * Название
+    * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     description?: string;
     /**
-    * Процент совпадения
+    * пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     matchPercentage?: number;
 }
 
 interface ParametersCombination {
     /**
-    * Список параметров
+    * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     parameters?: ParameterValue[];
     /**
-    * Дата создания
+    * пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     created?: string;
 }
 
 /**
-* Результат получения описания параметров
+* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 */
 interface GetParametersResponse {
     /**
-    * Список параметров
+    * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     parameters?: ParameterDefinition[];
 }
 
 /**
-* Результат получения рекомендаций по параметрам
+* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 */
 interface GetRecommendationResponse {
     /**
-    * Список рекомендаций
+    * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     recommendations?: RecommendationInfo[];
 }
 
 /**
-* Результат получения истории комбинаций параметров
+* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 */
 interface GetParametersHistoryResponse {
     /**
-    * Список комбинаций параметров
+    * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     combinations?: ParametersCombination[];
 }
@@ -122,22 +122,22 @@ interface GetParameters extends IReturn<GetParametersResponse> {
 // @Route("/Recommendation", "POST")
 interface GetRecommendation extends IReturn<GetRecommendationResponse> {
     /**
-    * Список параметров
+    * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
-    // @ApiMember(Description="Список параметров", IsRequired=true)
+    // @ApiMember(Description="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", IsRequired=true)
     parameters: ParameterValue[];
 }
 
 // @Route("/Recommendation/{RecommendationId}", "PUT")
 interface UpdateRecommendation {
     /**
-    * Список параметров
+    * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
-    // @ApiMember(Description="Список параметров", IsRequired=true)
+    // @ApiMember(Description="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", IsRequired=true)
     parameters: ParameterValue[];
 
     /**
-    * Идентификатор рекомендации
+    * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     */
     recommendationId?: string;
 }

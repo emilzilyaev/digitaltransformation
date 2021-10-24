@@ -16,6 +16,20 @@ type HandleInputProps = {
     value: any;
     onChange: (...event: any[]) => void;
     name: string;
+    isMulti: boolean;
+};
+
+const toId = (word: string) => {
+    return word.toLowerCase().replaceAll(/\s+/g, '');
+};
+
+const makeOptions = (words?: string[]) => {
+    return (words || []).map((word) => {
+        return {
+            label: word,
+            value: toId(word)
+        }
+    });
 };
 
 const Basic = () => {
@@ -47,8 +61,8 @@ const Basic = () => {
     }, []);
 
     const handleChange = (props: HandleInputProps) => {
-        const {value, onChange, name} = props;
-        if (value.length > MAX_PARAMETERS) {
+        const {value, onChange, name, isMulti} = props;
+        if (isMulti && value.length > MAX_PARAMETERS) {
             setError(name, {
                 type: "manual",
                 message: "Можно выбрать не более 5 параметров",
@@ -62,24 +76,32 @@ const Basic = () => {
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
-                {(modelParams || []).map((param: ParameterDefinition) => {
+                {(modelParams || []).map((param: ParameterDefinition, index: number) => {
+                    const isMulti = param.type === "MultiAcceptable";
+                    const id = toId(param.id);
                     return (
-                        <div>
-                            <label htmlFor="legal">{param.id}</label>
+                        <div key={index}>
+                            <label htmlFor={id}>{param.id}</label>
                             <Controller
                                 render={
                                     ({field}) => <Select
                                         {...field}
                                         placeholder={param.id}
-                                        isMulti={param.type === "MultiAcceptable"}
-                                        options={param.acceptableValues}
+                                        onChange={(value) => handleChange({
+                                            value,
+                                            onChange: field.onChange,
+                                            name: field.name,
+                                            isMulti
+                                        })}
+                                        isMulti={isMulti}
+                                        options={makeOptions(param.acceptableValues)}
                                     />
                                 }
                                 control={control}
-                                name={param.id ?? ""}
-                                defaultValue={param.type === "MultiAcceptable" ? [] : ""}
+                                name={id}
+                                defaultValue={isMulti ? [] : ""}
                             />
-                            {errors[param.id ?? ""] && <p>{errors[param.id ?? ""].message}</p>}
+                            {errors[id] && <p>{errors[id].message}</p>}
                         </div>
                     )
                 })}
