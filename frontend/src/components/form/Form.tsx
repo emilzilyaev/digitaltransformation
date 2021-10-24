@@ -7,7 +7,7 @@ import "./styles.css";
 import Recommendations from "../recommendations/Recommendations";
 
 const MAX_PARAMETERS = 5;
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'http://84.201.155.108';
 
 const PARAMS_URL = `${SERVER_URL}/Parameters`;
 const USER_CHOICE = `${SERVER_URL}/Recommendation`;
