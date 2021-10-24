@@ -112,7 +112,7 @@ const Basic = () => {
                                 }
                                 control={control}
                                 name={id}
-                                defaultValue={isMulti ? [] : ""}
+                                defaultValue={[]}
                             />
                             {errors[id] && <p>{errors[id].message}</p>}
                         </div>
