@@ -22,6 +22,6 @@
   },
   "include": [
     "src",
-    "../backend/RecomendationForStartups/dtos.ts"
+    "src/dtos.ts"
   ]
 }
