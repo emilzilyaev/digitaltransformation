@@ -1,18 +1,18 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using ServiceStack.DataAnnotations;
 
 namespace RecomendationForStartups.ServiceModel.Types
 {
-    [Description("Список параметров")]
+    [Description("РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ")]
     public class ParameterDefinition
     {
-        [Description("Идентификатор параметра")]
+        [Description("РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїР°СЂР°РјРµС‚СЂР°")]
         public string Id { get; set; }
 
-        [Description("Тип параметра")]
+        [Description("РўРёРї РїР°СЂР°РјРµС‚СЂР°")]
         public ParameterType Type { get; set; }
         
-        [Description("Список допустимых значений")]
+        [Description("РЎРїРёСЃРѕРє РґРѕРїСѓСЃС‚РёРјС‹С… Р·РЅР°С‡РµРЅРёР№")]
         public List<string> AcceptableValues { get; set; }
     }
 }

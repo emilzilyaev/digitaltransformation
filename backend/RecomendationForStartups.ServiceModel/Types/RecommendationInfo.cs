@@ -1,17 +1,17 @@
-using ServiceStack.DataAnnotations;
+п»їusing ServiceStack.DataAnnotations;
 
 namespace RecomendationForStartups.ServiceModel.Types
 {
-    [Description("Рекомендация")]
+    [Description("Р РµРєРѕРјРµРЅРґР°С†РёСЏ")]
     public class RecommendationInfo
     {
-        [Description("Идентификатор рекомендации")]
+        [Description("РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЂРµРєРѕРјРµРЅРґР°С†РёРё")]
         public string Id{ get; set; }
 
-        [Description("Название")]
+        [Description("РќР°Р·РІР°РЅРёРµ")]
         public string Description{ get; set; }
 
-        [Description("Процент совпадения")]
+        [Description("РџСЂРѕС†РµРЅС‚ СЃРѕРІРїР°РґРµРЅРёСЏ")]
         public double MatchPercentage { get; set; }
     }
 }

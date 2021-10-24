@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using ServiceStack.DataAnnotations;
 
@@ -6,10 +6,10 @@ namespace RecomendationForStartups.ServiceModel.Types
 {
     public class ParametersCombination
     {
-        [Description("Список параметров")]
+        [Description("РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ")]
         public List<ParameterValue> Parameters { get; set; }
 
-        [Description("Дата создания")]
+        [Description("Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ")]
         public DateTimeOffset Created { get; set; }
     }
 }

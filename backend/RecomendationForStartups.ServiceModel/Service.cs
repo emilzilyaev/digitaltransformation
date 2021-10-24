@@ -1,53 +1,53 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using RecomendationForStartups.ServiceModel.Types;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 
 namespace RecomendationForStartups.ServiceModel
 {
-    [Route("/Parameters", Verbs ="GET", Summary = "Получение описания параметров")]
+    [Route("/Parameters", Verbs ="GET", Summary = "РџРѕР»СѓС‡РµРЅРёРµ РѕРїРёСЃР°РЅРёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ")]
     public class GetParameters : IReturn<GetParameters.GetParametersResponse>
     {
-        [Description("Результат получения описания параметров")]
+        [Description("Р РµР·СѓР»СЊС‚Р°С‚ РїРѕР»СѓС‡РµРЅРёСЏ РѕРїРёСЃР°РЅРёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ")]
         public class GetParametersResponse
         {
-            [Description("Список параметров")]
+            [Description("РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ")]
             public List<ParameterDefinition> Parameters { get; set; }
         }
     }
     
-    [Route("/Recommendation", Verbs = "POST", Summary = "Получение рекомендаций по параметрам")]
+    [Route("/Recommendation", Verbs = "POST", Summary = "РџРѕР»СѓС‡РµРЅРёРµ СЂРµРєРѕРјРµРЅРґР°С†РёР№ РїРѕ РїР°СЂР°РјРµС‚СЂР°Рј")]
     public class GetRecommendation : IReturn<GetRecommendation.GetRecommendationResponse>
     {
-        [ApiMember(Description = "Список параметров")]
+        [ApiMember(Description = "РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ")]
         public List<ParameterValue> Parameters { get; set; }
         
-        [Description("Результат получения рекомендаций по параметрам")]
+        [Description("Р РµР·СѓР»СЊС‚Р°С‚ РїРѕР»СѓС‡РµРЅРёСЏ СЂРµРєРѕРјРµРЅРґР°С†РёР№ РїРѕ РїР°СЂР°РјРµС‚СЂР°Рј")]
         public class GetRecommendationResponse
         {
-            [Description("Список рекомендаций")]
+            [Description("РЎРїРёСЃРѕРє СЂРµРєРѕРјРµРЅРґР°С†РёР№")]
             public List<RecommendationInfo> Recommendations { get; set; }
 
         }
     }
 
-    [Route("/Recommendation/{RecommendationId}", Verbs = "PUT", Summary = "Дообучение модели рекомендаций по параметрам")]
+    [Route("/Recommendation/{RecommendationId}", Verbs = "PUT", Summary = "Р”РѕРѕР±СѓС‡РµРЅРёРµ РјРѕРґРµР»Рё СЂРµРєРѕРјРµРЅРґР°С†РёР№ РїРѕ РїР°СЂР°РјРµС‚СЂР°Рј")]
     public class UpdateRecommendation : IReturn
     {
-        [ApiMember(Description = "Список параметров", IsRequired = true)]
+        [ApiMember(Description = "РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ", IsRequired = true)]
         public List<ParameterValue> Parameters { get; set; }
 
-        [Description("Идентификатор рекомендации")]
+        [Description("РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЂРµРєРѕРјРµРЅРґР°С†РёРё")]
         public string RecommendationId { get; set; }
     }
 
-    [Route("/Parameters/History", Verbs = "GET", Summary = "Получение истории комбинаций параметров")]
+    [Route("/Parameters/History", Verbs = "GET", Summary = "РџРѕР»СѓС‡РµРЅРёРµ РёСЃС‚РѕСЂРёРё РєРѕРјР±РёРЅР°С†РёР№ РїР°СЂР°РјРµС‚СЂРѕРІ")]
     public class GetParametersHistory : IReturn<GetParametersHistory.GetParametersHistoryResponse>
     {
-        [Description("Результат получения истории комбинаций параметров")]
+        [Description("Р РµР·СѓР»СЊС‚Р°С‚ РїРѕР»СѓС‡РµРЅРёСЏ РёСЃС‚РѕСЂРёРё РєРѕРјР±РёРЅР°С†РёР№ РїР°СЂР°РјРµС‚СЂРѕРІ")]
         public class GetParametersHistoryResponse
         {
-            [Description("Список комбинаций параметров")]
+            [Description("РЎРїРёСЃРѕРє РєРѕРјР±РёРЅР°С†РёР№ РїР°СЂР°РјРµС‚СЂРѕРІ")]
             public List<ParametersCombination> Combinations { get; set; }
         }
     }

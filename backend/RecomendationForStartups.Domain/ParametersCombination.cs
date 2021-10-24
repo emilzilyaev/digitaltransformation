@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -6,13 +6,13 @@ namespace RecomendationForStartups.Domain
 {
     public class ParametersCombination
     {
-        [Description("Идентификатор")]
+        [Description("РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ")]
         public string Id { get; set; }
 
-        [Description("Список параметров")]
+        [Description("РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ")]
         public List<ParameterValue> Parameters { get; set; }
 
-        [Description("Дата создания")]
+        [Description("Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ")]
         public DateTimeOffset Created { get; set; }
     }
 }

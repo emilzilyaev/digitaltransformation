@@ -1,16 +1,16 @@
-using System.ComponentModel;
+п»їusing System.ComponentModel;
 
 namespace RecomendationForStartups.Domain
 {
     public enum ParameterType
     {
-        [Description("Число из диапазона")]
+        [Description("Р§РёСЃР»Рѕ РёР· РґРёР°РїР°Р·РѕРЅР°")]
         NumberRange,
 
-        [Description("Одно значение из фиксированных")]
+        [Description("РћРґРЅРѕ Р·РЅР°С‡РµРЅРёРµ РёР· С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹С…")]
         OneAcceptable,
 
-        [Description("Несколько значений из фиксированных")]
+        [Description("РќРµСЃРєРѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёР№ РёР· С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹С…")]
         MultiAcceptable
     }
 }

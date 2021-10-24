@@ -1,14 +1,14 @@
-using System.ComponentModel;
+п»їusing System.ComponentModel;
 
 namespace RecomendationForStartups.Domain
 {
-    [Description("Рекомендация")]
+    [Description("Р РµРєРѕРјРµРЅРґР°С†РёСЏ")]
     public class Recommendation
     {
-        [Description("Идентификатор рекомендации")]
+        [Description("РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЂРµРєРѕРјРµРЅРґР°С†РёРё")]
         public string Id{ get; set; }
 
-        [Description("Название")]
+        [Description("РќР°Р·РІР°РЅРёРµ")]
         public string Description{ get; set; }
     }
 }

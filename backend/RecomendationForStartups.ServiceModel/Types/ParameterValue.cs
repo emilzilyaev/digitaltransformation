@@ -1,15 +1,15 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using ServiceStack.DataAnnotations;
 
 namespace RecomendationForStartups.ServiceModel.Types
 {
-    [Description("Значение параметра")]
+    [Description("Р—РЅР°С‡РµРЅРёРµ РїР°СЂР°РјРµС‚СЂР°")]
     public class ParameterValue
     {
-        [Description("Идентификатор параметра")]
+        [Description("РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїР°СЂР°РјРµС‚СЂР°")]
         public string Id{ get; set; }
 
-        [Description("Список значений")]
+        [Description("РЎРїРёСЃРѕРє Р·РЅР°С‡РµРЅРёР№")]
         public List<string> Values { get; set; }
     }
 }

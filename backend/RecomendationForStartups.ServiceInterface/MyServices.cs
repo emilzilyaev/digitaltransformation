@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +28,7 @@ namespace RecomendationForStartups.ServiceInterface
         public async Task<GetRecommendation.GetRecommendationResponse> Post(GetRecommendation request)
         {
             var response = new GetRecommendation.GetRecommendationResponse();
-            //TODO тут обращаемся к нейронке
+            //TODO С‚СѓС‚ РѕР±СЂР°С‰Р°РµРјСЃСЏ Рє РЅРµР№СЂРѕРЅРєРµ
             var random = new Random();
             var result = new Dictionary<string, double>();
             for (int i = 0; i < 119; i++)
