@@ -9,10 +9,13 @@ namespace RecomendationForStartups.Domain
         [Description("Идентификатор параметра")]
         public string Id { get; set; }
 
+        [Description("Описание параметра")]
+        public string Description { get; set; }
+
         [Description("Тип параметра")]
         public ParameterType Type { get; set; }
-        
+
         [Description("Список допустимых значений")]
-        public List<string> AcceptableValues { get; set; }
+        public Dictionary<string, string> AcceptableValues { get; set; }
     }
 }

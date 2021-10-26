@@ -75,34 +75,6 @@ namespace RecomendationForStartups.ServiceInterface
             if (request?.Parameters == null)
                 throw new BadRequestException();
             var response = new GetRecommendation.GetRecommendationResponse();
-            var mlSection = Configuration.GetSection("ML");
-            var mlBaseUri = mlSection["BaseUri"].Replace("node_id", mlSection["NodeId"]);
-            var mlClient = new JsonServiceClient(mlBaseUri);
-            mlClient.AsyncOneWayBaseUri = mlClient.BaseUri;
-            mlClient.SyncReplyBaseUri = mlClient.BaseUri;
-#if !DEBUG
-            mlClient.BearerToken = mlSection["Token"];
-#else
-            var tokenClient = new JsonServiceClient("http://169.254.169.254");
-            tokenClient.AddHeader("Metadata-Flavor","Google");
-            tokenClient.AsyncOneWayBaseUri = mlClient.BaseUri;
-            tokenClient.SyncReplyBaseUri = mlClient.BaseUri;
-            var getTokenResult = await tokenClient.GetAsync(new GetToken());
-            mlClient.BearerToken = getTokenResult.access_token;
-#endif
-            var mlResult = await mlClient.PostAsync(new ExecuteModel
-            {
-                folder_id = mlSection["FolderId"],
-                node_id = mlSection["NodeId"],
-                input = new ExecuteModel.InputModel
-                {
-                    a = "1",
-                    b = "2",
-                    c = "3",
-                    d = "4",
-                    e = "5"
-                }
-            });
 
             //TODO тут обращаемся к нейронке
             var random = new Random();
@@ -135,10 +107,10 @@ namespace RecomendationForStartups.ServiceInterface
             {
                 foreach (var parameter in combination.Parameters.OrderBy(value => value.Id))
                 {
-                    key.Append(parameter.Id);
+                    key.Append($"({parameter.Id})=");
                     foreach (var value in parameter.Values.OrderBy(s => s))
                     {
-                        key.Append(value);
+                        key.Append($"[{value}]");
                     }
                 }
             }
@@ -158,7 +130,7 @@ namespace RecomendationForStartups.ServiceInterface
         {
             var response = new GetParametersHistory.GetParametersHistoryResponse();
             var history = await RavenSession.Query<Domain.ParametersCombination>().ToListAsync();
-            response.Combinations = history.Select(Mapper.Map<ParametersCombination>).ToList();
+            response.Combinations = history.Select(Mapper.Map<ParametersCombination>).OrderByDescending(c => c.Created).ToList();
             return response;
         }
     }

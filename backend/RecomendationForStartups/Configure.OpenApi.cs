@@ -1,4 +1,4 @@
-using ServiceStack;
+﻿using ServiceStack;
 using ServiceStack.Api.OpenApi;
 
 namespace RecomendationForStartups

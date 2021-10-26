@@ -1,3 +1,6 @@
+p2
+Рынок
+n
 Advertising & Marketing
 AgroTech
 Business Software

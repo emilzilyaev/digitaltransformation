@@ -1,4 +1,5 @@
-using System;
+п»їusing System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -63,7 +64,7 @@ namespace RecomendationForStartups
                 var dbRecord = serviceProvider.GetRequiredService<DatabaseRecord>();
                 var dbOptions = new DatabaseOptions(dbRecord);
 
-                //Задать способ поиска имени коллекции
+                //Р—Р°РґР°С‚СЊ СЃРїРѕСЃРѕР± РїРѕРёСЃРєР° РёРјРµРЅРё РєРѕР»Р»РµРєС†РёРё
                 dbOptions.Conventions = new DocumentConventions
                 {
                     FindCollectionName = type => type.Name,
@@ -83,7 +84,7 @@ namespace RecomendationForStartups
                 var environment = serviceProvider.GetRequiredService<IHostEnvironment>();
                 var serverOptions = Configuration.GetSection("RavenDb:ServerOptions").Get<ServerOptions>();
 
-                //Ищем подходящую версию DotNet для запуска процесса RavenDB
+                //РС‰РµРј РїРѕРґС…РѕРґСЏС‰СѓСЋ РІРµСЂСЃРёСЋ DotNet РґР»СЏ Р·Р°РїСѓСЃРєР° РїСЂРѕС†РµСЃСЃР° RavenDB
                 try
                 {
                     serverOptions.FrameworkVersion = serviceProvider.GetRequiredService<DotNetVersionHelper>()
@@ -94,13 +95,13 @@ namespace RecomendationForStartups
                     Console.WriteLine(e.Message);
                 }
 
-                //Получаем путь запуска приложения, так как RavenDB в Embeddeed режиме запускается через командную строку
-                //Следовательно при упаковке в единый файл, данные будут лежать в папке Temp
-                //Чтобы этого избежать используем исправления ниже
+                //РџРѕР»СѓС‡Р°РµРј РїСѓС‚СЊ Р·Р°РїСѓСЃРєР° РїСЂРёР»РѕР¶РµРЅРёСЏ, С‚Р°Рє РєР°Рє RavenDB РІ Embeddeed СЂРµР¶РёРјРµ Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ С‡РµСЂРµР· РєРѕРјР°РЅРґРЅСѓСЋ СЃС‚СЂРѕРєСѓ
+                //РЎР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ РїСЂРё СѓРїР°РєРѕРІРєРµ РІ РµРґРёРЅС‹Р№ С„Р°Р№Р», РґР°РЅРЅС‹Рµ Р±СѓРґСѓС‚ Р»РµР¶Р°С‚СЊ РІ РїР°РїРєРµ Temp
+                //Р§С‚РѕР±С‹ СЌС‚РѕРіРѕ РёР·Р±РµР¶Р°С‚СЊ РёСЃРїРѕР»СЊР·СѓРµРј РёСЃРїСЂР°РІР»РµРЅРёСЏ РЅРёР¶Рµ
                 var path = environment.ContentRootPath;
-                //Исправляем путь к базе
+                //РСЃРїСЂР°РІР»СЏРµРј РїСѓС‚СЊ Рє Р±Р°Р·Рµ
                 serverOptions.DataDirectory = Path.Combine(path, serverOptions.DataDirectory);
-                //Исправляем путь к логам
+                //РСЃРїСЂР°РІР»СЏРµРј РїСѓС‚СЊ Рє Р»РѕРіР°Рј
                 serverOptions.LogsPath = Path.Combine(path, serverOptions.LogsPath);
 
                 return serverOptions;
@@ -117,80 +118,25 @@ namespace RecomendationForStartups
             });
             services.AddSingleton<IDocumentStore>(serviceProvider =>
             {
-                //Запускаем сервер
+                //Р—Р°РїСѓСЃРєР°РµРј СЃРµСЂРІРµСЂ
                 var embeddedServer = serviceProvider.GetRequiredService<EmbeddedServer>();
 
                 var databaseOptions = serviceProvider.GetRequiredService<DatabaseOptions>();
 
-                //Создаётся база, если не существует
+                //РЎРѕР·РґР°С‘С‚СЃСЏ Р±Р°Р·Р°, РµСЃР»Рё РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
                 var documentStore = embeddedServer.GetDocumentStore(databaseOptions);
                 documentStore.Initialize();
 
-                //Получаем настройки базы
+                //РџРѕР»СѓС‡Р°РµРј РЅР°СЃС‚СЂРѕР№РєРё Р±Р°Р·С‹
                 var databaseRecord = documentStore.Maintenance.Server.Send(new GetDatabaseRecordOperation(documentStore.Database));
 
-                //Если настроек ревизий нет
+                //Р•СЃР»Рё РЅР°СЃС‚СЂРѕРµРє СЂРµРІРёР·РёР№ РЅРµС‚
                 if (databaseRecord.Revisions == null)
                 {
                     documentStore.ConfigureRevisions();
                 }
                 var session = documentStore.OpenSession();
-                var haveAnyParameterDefinition = session.Query<ParameterDefinition>().Any();
-                if (!haveAnyParameterDefinition)
-                {
-                    Console.WriteLine("ParameterDefinition not found!");
-                    var dataCatalog = new DirectoryInfo("Data");
-                    if (dataCatalog.Exists)
-                    {
-                        Console.WriteLine($"{dataCatalog.FullName} is exist");
-                        dataCatalog = dataCatalog.GetDirectories().First(i => i.Name == "Parameters");
-                        foreach (var fileInfo in dataCatalog.EnumerateFiles())
-                        {
-                            Console.WriteLine($"Read {fileInfo.FullName} reading...");
-                            var lines = fileInfo.ReadAllText().Split("\n").Select(s => s.Trim())
-                                .Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
-                            var nameSplit = fileInfo.Name.Split(".");
-                            var parameterDefinition = new ParameterDefinition()
-                            {
-                                Id = nameSplit[0],
-                                AcceptableValues = lines,
-                                Type = nameSplit[1] == "1"? ParameterType.OneAcceptable: ParameterType.MultiAcceptable,
-                            };
-
-                            Console.WriteLine($"Read {fileInfo.FullName} parsed {lines.Count}");
-                            session.Store(parameterDefinition);
-                        }
-                        session.SaveChanges();
-                    }
-                }
-
-                var haveAnyRecommendation = session.Query<Recommendation>().Any();
-                if (!haveAnyRecommendation)
-                {
-                    var dataCatalog = new DirectoryInfo("Data");
-                    if (dataCatalog.Exists)
-                    {
-                        Console.WriteLine($"{dataCatalog.FullName} is exist");
-                        dataCatalog = dataCatalog.GetDirectories().First(i => i.Name == "Recommendation");
-                        foreach (var fileInfo in dataCatalog.EnumerateFiles())
-                        {
-                            Console.WriteLine($"Read {fileInfo.FullName} reading...");
-                            var lines = fileInfo.ReadAllText().Split("\n").Select(s => s.Trim())
-                                .Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
-                            foreach (var line in lines)
-                            {
-                                var match = Regex.Match(line, "(?<id>\\d+)\\s+(?<name>.+)");
-                                var recommendation = new Recommendation
-                                {
-                                    Id = match.Groups["id"].Value,
-                                    Description = match.Groups["name"].Value.Trim()
-                                };
-                                session.Store(recommendation);
-                            }
-                        }
-                        session.SaveChanges();
-                    }
-                }
+                SeedData(session);
 
                 return documentStore;
             });
@@ -208,6 +154,76 @@ namespace RecomendationForStartups
                     .OpenAsyncSession();
                 return session;
             });
+        }
+
+        private static void SeedData(IDocumentSession session)
+        {
+            var haveAnyParameterDefinition = session.Query<ParameterDefinition>().Any();
+            if (!haveAnyParameterDefinition)
+            {
+                Console.WriteLine("ParameterDefinition not found!");
+                var dataCatalog = new DirectoryInfo("Data");
+                if (dataCatalog.Exists)
+                {
+                    Console.WriteLine($"{dataCatalog.FullName} is exist");
+                    dataCatalog = dataCatalog.GetDirectories().First(i => i.Name == "Parameters");
+                    foreach (var fileInfo in dataCatalog.EnumerateFiles())
+                    {
+                        Console.WriteLine($"Read {fileInfo.FullName} reading...");
+                        var lines = fileInfo.ReadAllText().Split("\n").Select(s => s.Trim())
+                            .Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+                        var nameSplit = lines.Take(3).ToList();
+                        var iterator = 0;
+                        var values = new Dictionary<string, string>();
+                        foreach (var value in lines.Skip(3))
+                        {
+                            values[$"{iterator++}"] = value;
+                        }
+
+                        var parameterDefinition = new ParameterDefinition
+                        {
+                            Id = nameSplit[0],
+                            Description = nameSplit[1],
+                            AcceptableValues = values,
+                            Type = nameSplit[2] == "1" ? ParameterType.OneAcceptable : ParameterType.MultiAcceptable,
+                        };
+
+                        Console.WriteLine($"Read {fileInfo.FullName} parsed {lines.Count}");
+                        session.Store(parameterDefinition);
+                    }
+
+                    session.SaveChanges();
+                }
+            }
+
+            var haveAnyRecommendation = session.Query<Recommendation>().Any();
+            if (!haveAnyRecommendation)
+            {
+                var dataCatalog = new DirectoryInfo("Data");
+                if (dataCatalog.Exists)
+                {
+                    Console.WriteLine($"{dataCatalog.FullName} is exist");
+                    dataCatalog = dataCatalog.GetDirectories().First(i => i.Name == "Recommendation");
+                    foreach (var fileInfo in dataCatalog.EnumerateFiles())
+                    {
+                        Console.WriteLine($"Read {fileInfo.FullName} reading...");
+                        var lines = fileInfo.ReadAllText().Split("\n").Select(s => s.Trim())
+                            .Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
+                        foreach (var line in lines)
+                        {
+                            var match = Regex.Match(line, "(?<id>\\d+)\\s+(?<name>.+)");
+                            var recommendation = new Recommendation
+                            {
+                                Id = match.Groups["id"].Value,
+                                Description = match.Groups["name"].Value.Trim()
+                            };
+                            session.Store(recommendation);
+                        }
+                    }
+
+                    session.SaveChanges();
+                }
+            }
         }
     }    
 }

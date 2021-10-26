@@ -1,3 +1,6 @@
+p5
+Технологическая ниша
+n
 BioTech
 EdTech
 FinTech
