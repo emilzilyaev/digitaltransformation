@@ -7,7 +7,7 @@ import "./styles.css";
 import Recommendations from "../recommendations/Recommendations";
 
 const MAX_PARAMETERS = 5;
-const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'http://84.201.155.108';
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'http://62.84.123.217';
 
 const PARAMS_URL = `${SERVER_URL}/Parameters`;
 const USER_CHOICE = `${SERVER_URL}/Recommendation`;
@@ -19,20 +19,13 @@ type HandleInputProps = {
     isMulti: boolean;
 };
 
-const toId = (word: string) => {
-    return word.toLowerCase().replaceAll(/\s+/g, '');
-};
-
-const makeOptions = (words?: string[]) => {
-    return (words || []).map((word) => {
+const makeOptions = (words: { [index: string]: string; }) =>
+    Object.entries(words).map(([, value]) => {
         return {
-            label: word,
-            value: toId(word)
+            label: value,
+            value: value
         }
     });
-};
-
-const idsMap = new Map<string, string>();
 
 const Basic = () => {
     const {handleSubmit, control, getValues, setError, clearErrors, formState: {errors}} = useForm();
@@ -46,14 +39,14 @@ const Basic = () => {
             if (!data.hasOwnProperty(key)) continue;
             const contents = data[key];
             const values = Array.isArray(contents) ? contents.map((it) => it.label) : [contents.label];
-            parameters.push({id: idsMap.get(key), values});
+            parameters.push({id: key, values});
         }
         sendUserChoice({parameters});
     };
 
     const sendUserChoice = (values: GetRecommendation) => {
         axios.post<GetRecommendationResponse>(USER_CHOICE, {
-            body: values,
+            ...values
         }).then(({data}) => {
             setRecommendations(data.recommendations);
         })
@@ -63,9 +56,6 @@ const Basic = () => {
         axios.get<GetParametersResponse>(PARAMS_URL).then(({data}) => {
             const parameters = data.parameters || [];
             setParams(parameters);
-            parameters.forEach((param) => {
-                idsMap.set(toId(param.id), param.id)
-            })
         })
     };
 
@@ -91,15 +81,14 @@ const Basic = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 {(modelParams || []).map((param: ParameterDefinition, index: number) => {
                     const isMulti = param.type === "MultiAcceptable";
-                    const id = toId(param.id);
                     return (
-                        <div key={index}>
-                            <label htmlFor={id}>{param.id}</label>
+                        <div key={param.id}>
+                            <label htmlFor={param.id}>{param.description}</label>
                             <Controller
                                 render={
                                     ({field}) => <Select
                                         {...field}
-                                        placeholder={param.id}
+                                        placeholder={param.description}
                                         onChange={(value) => handleChange({
                                             value,
                                             onChange: field.onChange,
@@ -111,10 +100,10 @@ const Basic = () => {
                                     />
                                 }
                                 control={control}
-                                name={id}
+                                name={param.id}
                                 defaultValue={[]}
                             />
-                            {errors[id] && <p>{errors[id].message}</p>}
+                            {errors[param.id] && <p>{errors[param.id].message}</p>}
                         </div>
                     )
                 })}

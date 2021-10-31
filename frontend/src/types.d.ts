@@ -1,8 +1,8 @@
 /* Options:
-Date: 2021-10-23 15:01:43
+Date: 2021-10-31 18:40:36
 Version: 5.121
 Tip: To override a DTO option, remove "//" prefix before updating
-BaseUrl: https://localhost:5001
+BaseUrl: http://62.84.123.217
 
 //GlobalNamespace:
 //MakePropertiesOptional: True
@@ -16,132 +16,149 @@ BaseUrl: https://localhost:5001
 */
 
 
-interface IReturn<T> {
+interface IReturn<T>
+{
 }
 
-interface IReturnVoid {
+interface IReturnVoid
+{
 }
 
 /**
-* �������� ���������
-*/
-interface ParameterValue {
+ * Значение параметра
+ */
+interface ParameterValue
+{
     /**
-    * ������������� ���������
-    */
+     * Идентификатор параметра
+     */
     id?: string;
     /**
-    * ������ ��������
-    */
+     * Список значений
+     */
     values?: string[];
 }
 
 type ParameterType = "NumberRange" | "OneAcceptable" | "MultiAcceptable";
 
 /**
-* ������ ����������
-*/
-interface ParameterDefinition {
+ * Список параметров
+ */
+interface ParameterDefinition
+{
     /**
-    * ������������� ���������
-    */
+     * Идентификатор параметра
+     */
     id: string;
     /**
-    * ��� ���������
-    */
+     * Описание параметра
+     */
+    description: string;
+    /**
+     * Тип параметра
+     */
     type?: ParameterType;
     /**
-    * ������ ���������� ��������
-    */
-    acceptableValues?: string[];
+     * Список допустимых значений
+     */
+    acceptableValues: { [index: string]: string; };
 }
 
 /**
-* ������������
-*/
-interface RecommendationInfo {
+ * Рекомендация
+ */
+interface RecommendationInfo
+{
     /**
-    * ������������� ������������
-    */
+     * Идентификатор рекомендации
+     */
     id?: string;
     /**
-    * ��������
-    */
+     * Название
+     */
     description?: string;
     /**
-    * ������� ����������
-    */
+     * Процент совпадения
+     */
     matchPercentage?: number;
 }
 
-interface ParametersCombination {
+interface ParametersCombination
+{
     /**
-    * ������ ����������
-    */
+     * Список параметров
+     */
     parameters?: ParameterValue[];
     /**
-    * ���� ��������
-    */
+     * Дата создания
+     */
     created?: string;
 }
 
 /**
-* ��������� ��������� �������� ����������
-*/
-interface GetParametersResponse {
+ * Результат получения описания параметров
+ */
+interface GetParametersResponse
+{
     /**
-    * ������ ����������
-    */
+     * Список параметров
+     */
     parameters?: ParameterDefinition[];
 }
 
 /**
-* ��������� ��������� ������������ �� ����������
-*/
-interface GetRecommendationResponse {
+ * Результат получения рекомендаций по параметрам
+ */
+interface GetRecommendationResponse
+{
     /**
-    * ������ ������������
-    */
+     * Список рекомендаций
+     */
     recommendations?: RecommendationInfo[];
 }
 
 /**
-* ��������� ��������� ������� ���������� ����������
-*/
-interface GetParametersHistoryResponse {
+ * Результат получения истории комбинаций параметров
+ */
+interface GetParametersHistoryResponse
+{
     /**
-    * ������ ���������� ����������
-    */
+     * Список комбинаций параметров
+     */
     combinations?: ParametersCombination[];
 }
 
 // @Route("/Parameters", "GET")
-interface GetParameters extends IReturn<GetParametersResponse> {
+interface GetParameters extends IReturn<GetParametersResponse>
+{
 }
 
 // @Route("/Recommendation", "POST")
-interface GetRecommendation extends IReturn<GetRecommendationResponse> {
+interface GetRecommendation extends IReturn<GetRecommendationResponse>
+{
     /**
-    * ������ ����������
-    */
-    // @ApiMember(Description="������ ����������", IsRequired=true)
-    parameters: ParameterValue[];
+     * Список параметров
+     */
+    // @ApiMember(Description="Список параметров")
+    parameters?: ParameterValue[];
 }
 
 // @Route("/Recommendation/{RecommendationId}", "PUT")
-interface UpdateRecommendation {
+interface UpdateRecommendation
+{
     /**
-    * ������ ����������
-    */
-    // @ApiMember(Description="������ ����������", IsRequired=true)
+     * Список параметров
+     */
+    // @ApiMember(Description="Список параметров", IsRequired=true)
     parameters: ParameterValue[];
 
     /**
-    * ������������� ������������
-    */
+     * Идентификатор рекомендации
+     */
     recommendationId?: string;
 }
 
 // @Route("/Parameters/History", "GET")
-interface GetParametersHistory extends IReturn<GetParametersHistoryResponse> {
+interface GetParametersHistory extends IReturn<GetParametersHistoryResponse>
+{
 }
